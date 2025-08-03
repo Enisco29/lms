@@ -1,27 +1,41 @@
-# INTRODUCTION
-edemy: A LMS website created for student to learn new things
+# 📚 edemy LMS
 
-# TECH STACK
-*REACT*
-*NODE.JS*
-*EXPRESS JS*
-*MONGODB*
-*CLERK*
+A LMS website created for students to learn new things.
 
-# FEATURES
-Authentication Using Clerk
+---
 
-# QUICK START
-*Follow this steps to set up the project locally on your machine
+## 🚀 Tech Stack
 
-*clone the repo
-*install the dependencies using "npm install"
+- **React**
+- **Node.js**
+- **Express.js**
+- **MongoDB**
+- **Clerk**
 
-# set up your environmental variables *env
+---
+
+## ✨ Features
+
+- Authentication using Clerk
+- Filtering of courses in course section
+
+---
+
+## ⚡ Quick Start
+
+Follow these steps to set up the project locally on your machine:
+
+1. **Clone the repo**
+2. **Install the dependencies:**
+   npm install
+
+🛠️ Environment Variables
+Set up your environmental variables (.env):
+
 VITE_CLERK_PUBLISHABLE_KEY - clerk.com
+VITE_CURRENCY
 
+🏃 Run the Project
+npm run dev
 
-# RUN THE PROJECT
-"npm run dev"
-
-*FEEL FREE TO GIVE A FOLLOW AND STAR ME"  
+Feel free to give a follow and star me!

@@ -1,5 +1,5 @@
 import { assets } from "../../assets/assets";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
@@ -7,6 +7,7 @@ const Navbar = () => {
 
   const { openSignIn } = useClerk();
   const { user } = useUser();
+  const navigate = useNavigate()
 
   return (
     <div
@@ -15,6 +16,7 @@ const Navbar = () => {
       }`}
     >
       <img
+      onClick={() => navigate('/')}
         src={assets.logo}
         alt="logo"
         className="w-28 lg:w-32 cursor-pointer"
@@ -59,7 +61,7 @@ const Navbar = () => {
           </button>
         )}
       </div>
-    </div> //1:07:06
+    </div>
   );
 };
 
