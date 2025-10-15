@@ -1,6 +1,7 @@
 import CallToAction from "../../components/students/CallToAction";
 import Companies from "../../components/students/Companies";
 import Coursesection from "../../components/students/Coursesection";
+import Footer from "../../components/students/Footer";
 import Hero from "../../components/students/Hero";
 import Testimonials from "../../components/students/Testimonials";
 
@@ -12,6 +13,7 @@ const Home = () => {
       <Coursesection />
       <Testimonials />
       <CallToAction />
+      <Footer />
     </div>
   );
 };
