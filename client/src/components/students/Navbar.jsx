@@ -1,13 +1,17 @@
 import { assets } from "../../assets/assets";
 import { Link, useNavigate } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const Navbar = () => {
+  const { isEducator } = useContext(AppContext);
+
   const isCourseListPage = location.pathname.includes("/course-list");
 
   const { openSignIn } = useClerk();
   const { user } = useUser();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div
@@ -16,7 +20,7 @@ const Navbar = () => {
       }`}
     >
       <img
-      onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
         src={assets.logo}
         alt="logo"
         className="w-28 lg:w-32 cursor-pointer"
@@ -26,8 +30,13 @@ const Navbar = () => {
           {user && (
             <>
               {" "}
-              <button className="cursor-pointer">Become Educator</button> |
-              <Link to="/my-enrollments">My Enrollments</Link>
+              <button
+                onClick={() => navigate("/educator")}
+                className="cursor-pointer"
+              >
+                {isEducator ? "Educator Dashboard" : "Become Educator"}
+              </button>{" "}
+              |<Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
         </div>
@@ -48,15 +57,20 @@ const Navbar = () => {
           {user && (
             <>
               {" "}
-              <button className="cursor-pointer">Become Educator</button> |
-              <Link to="/my-enrollments">My Enrollments</Link>
+              <button
+                onClick={() => navigate("/educator")}
+                className="cursor-pointer"
+              >
+                {isEducator ? "Educator Dashboard" : "Become Educator"}
+              </button>{" "}
+              |<Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
         </div>
         {user ? (
           <UserButton />
         ) : (
-          <button onClick={() => openSignIn()} >
+          <button onClick={() => openSignIn()}>
             <img src={assets.user_icon} alt="user-icon" />
           </button>
         )}
