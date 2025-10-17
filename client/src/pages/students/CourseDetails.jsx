@@ -4,6 +4,7 @@ import { AppContext } from "../../context/AppContext";
 import Loading from "../../components/students/Loading";
 import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
+import Youtube from "react-youtube";
 import Footer from "../../components/students/Footer";
 
 const CourseDetails = () => {
@@ -12,6 +13,7 @@ const CourseDetails = () => {
   const [courseData, setCourseData] = useState(null);
   const [openSection, setOpenSection] = useState({});
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+  const [playerData, setPlayerData] = useState(null);
 
   const {
     currency,
@@ -29,7 +31,7 @@ const CourseDetails = () => {
 
   useEffect(() => {
     fetchCourseData();
-  }, []);
+  }, [allCourses]);
 
   const toggleSection = (index) => {
     setOpenSection((prev) => ({
@@ -133,7 +135,16 @@ const CourseDetails = () => {
                             <p>{lecture.lectureTitle}</p>
                             <div className="flex gap-2">
                               {lecture.isPreviewFree && (
-                                <p className="text-blue-500 cursor-pointer">
+                                <p
+                                  onClick={() =>
+                                    setPlayerData({
+                                      videoId: lecture.lectureUrl
+                                        .split("/")
+                                        .pop(),
+                                    })
+                                  }
+                                  className="text-blue-500 cursor-pointer"
+                                >
                                   Preview
                                 </p>
                               )}
@@ -169,7 +180,20 @@ const CourseDetails = () => {
 
         {/* right column */}
         <div className="max-w-[424px] z-10 shadow-[0_4px_15px_2px] shadow-[rgba(0,0,0,0.1)] rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]">
-          <img src={courseData.courseThumbnail} alt="thumbnail" />
+          {playerData ? (
+            <Youtube
+              videoId={playerData.videoId}
+              opts={{
+                playerVars: {
+                  autoplay: 1,
+                },
+              }}
+              iframeClassName="w-full aspect-video"
+            />
+          ) : (
+            <img src={courseData.courseThumbnail} alt="thumbnail" />
+          )}
+
           <div className="p-5">
             <div className="flex items-center gap-2">
               <img
@@ -177,8 +201,9 @@ const CourseDetails = () => {
                 alt="time_icon"
                 className="w-3.5"
               />
+
               <p className="text-red-500">
-                <span className="font-medium">5 days</span>left at this price
+                <span className="font-medium">5 days </span>left at this price
               </p>
             </div>
 
