@@ -5,6 +5,7 @@ import Youtube from "react-youtube";
 import { useParams } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import Footer from "../../components/students/Footer";
+import Rating from "../../components/students/Rating";
 
 const Player = () => {
   const { enrolledCourses, calculateChapterTime } = useContext(AppContext);
@@ -117,6 +118,7 @@ const Player = () => {
 
           <div className="flex items-center gap-2 py-3 mt-10">
             <h1 className="text-xl font-bold">Rate this Course</h1>
+            <Rating initialRating={0} />
           </div>
         </div>
 
