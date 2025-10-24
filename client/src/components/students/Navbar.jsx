@@ -3,15 +3,46 @@ import { Link, useNavigate } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { isEducator } = useContext(AppContext);
+  const { isEducator, backendUrl, setIsEducator, getToken } =
+    useContext(AppContext);
 
   const isCourseListPage = location.pathname.includes("/course-list");
 
   const { openSignIn } = useClerk();
   const { user } = useUser();
   const navigate = useNavigate();
+
+  const becomeEducator = async () => {
+    try {
+      if (isEducator) {
+        navigate("/educator");
+        return;
+      }
+
+      const token = await getToken();
+      const { data } = await axios.get(
+        backendUrl + "/api/educator/update-role",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.sucess) {
+        setIsEducator(true);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(data.message);
+    }
+  };
 
   return (
     <div
@@ -30,10 +61,7 @@ const Navbar = () => {
           {user && (
             <>
               {" "}
-              <button
-                onClick={() => navigate("/educator")}
-                className="cursor-pointer"
-              >
+              <button onClick={becomeEducator} className="cursor-pointer">
                 {isEducator ? "Educator Dashboard" : "Become Educator"}
               </button>{" "}
               |<Link to="/my-enrollments">My Enrollments</Link>
@@ -57,10 +85,7 @@ const Navbar = () => {
           {user && (
             <>
               {" "}
-              <button
-                onClick={() => navigate("/educator")}
-                className="cursor-pointer"
-              >
+              <button onClick={becomeEducator} className="cursor-pointer">
                 {isEducator ? "Educator Dashboard" : "Become Educator"}
               </button>{" "}
               |<Link to="/my-enrollments">My Enrollments</Link>
