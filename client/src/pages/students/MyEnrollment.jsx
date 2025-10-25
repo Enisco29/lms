@@ -34,7 +34,7 @@ const MyEnrollment = () => {
             }
           );
 
-          let totalLectures = calculateCourseDuration(course);
+          let totalLectures = calculateNoOfLectures(course);
 
           const lectureCompleted = data.progressData
             ? data.progressData.lectureCompleted.length
