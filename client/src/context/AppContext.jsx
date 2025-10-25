@@ -56,7 +56,7 @@ export const AppContextProvider = (props) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(data.message);
+      toast.error(error.message);
     }
   };
 
@@ -84,18 +84,20 @@ export const AppContextProvider = (props) => {
     let time = 0;
 
     // Add safety check for courseContent
-  if (!course.courseContent || !Array.isArray(course.courseContent)) {
-    return "0h 0m";
-  }
-
-  course.courseContent.map((chapter) => {
-    // Add safety check for chapterContent
-    if (chapter.chapterContent && Array.isArray(chapter.chapterContent)) {
-      chapter.chapterContent.map((lecture) => (time += lecture.lectureDuration));
+    if (!course.courseContent || !Array.isArray(course.courseContent)) {
+      return "0h 0m";
     }
-  });
-  return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] });
-};
+
+    course.courseContent.map((chapter) => {
+      // Add safety check for chapterContent
+      if (chapter.chapterContent && Array.isArray(chapter.chapterContent)) {
+        chapter.chapterContent.map(
+          (lecture) => (time += lecture.lectureDuration)
+        );
+      }
+    });
+    return humanizeDuration(time * 60 * 1000, { units: ["h", "m"] });
+  };
 
   //function to calculate no of lecture in the course
   const calculateNoOfLectures = (course) => {
@@ -127,7 +129,7 @@ export const AppContextProvider = (props) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(data.message);
+      toast.error(error.message);
     }
   };
 

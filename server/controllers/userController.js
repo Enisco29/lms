@@ -6,7 +6,7 @@ import { CourseProgress } from "../models/CourseProgress.js";
 
 export const getUserData = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const user = await User.findById(userId);
 
     if (!user) {
@@ -30,7 +30,7 @@ export const getUserData = async (req, res) => {
 //users enrolled courses with lecture links
 export const userEnrolledCourses = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const userData = await User.findById(userId).populate("enrolledCourses");
 
     res.status(200).json({
@@ -50,7 +50,7 @@ export const purchaseCourse = async (req, res) => {
   try {
     const { courseId } = req.body;
     const { origin } = req.headers;
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const userData = await User.findById(userId);
     const courseData = await Course.findById(courseId);
 
@@ -115,7 +115,7 @@ export const purchaseCourse = async (req, res) => {
 //Update User Course Progress
 export const updateUserCourseProgress = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const { courseId, lectureId } = req.body;
 
     const progressData = await CourseProgress.findOne({ userId, courseId });
@@ -153,7 +153,7 @@ export const updateUserCourseProgress = async (req, res) => {
 //get user course progress
 export const getUserCourseProgress = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+    const { userId } = req.auth();
     const { courseId, lectureId } = req.body;
 
     const progressData = await CourseProgress.findOne({ userId, courseId });
@@ -171,7 +171,7 @@ export const getUserCourseProgress = async (req, res) => {
 
 //add user ratings to course
 export const addUserRating = async (req, res) => {
-  const userId = req.auth.userId;
+  const { userId } = req.auth();
   const { courseId, rating } = req.body;
 
   if (!courseId || !userId || !rating || rating < 1 || rating > 5) {
