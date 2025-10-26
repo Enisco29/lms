@@ -308,11 +308,11 @@ const CourseDetails = () => {
                 What's in the course?
               </p>
               <ul className="ml-4 pt-2 text-sm md:text-default list-disc text-gray-500">
-                <li>Lifetime accesss eith free updates</li>
-                <li>Lifetime accesss eith free updates</li>
-                <li>Lifetime accesss eith free updates</li>
-                <li>Lifetime accesss eith free updates</li>
-                <li>Lifetime accesss eith free updates</li>
+                <li>Lifetime access with all future updates</li>
+                <li>Real-world projects & exercises</li>
+                <li>Downloadable resources and materials</li>
+                <li>Expert instructor support</li>
+                <li>Career guidance & mentorship</li>{" "}
               </ul>
             </div>
           </div>
