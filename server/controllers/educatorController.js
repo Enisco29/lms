@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/express";
 import Course from "../models/Course.js";
+import User from "../models/User.js";
 import { v2 as cloudinary } from "cloudinary";
 import { Purchase } from "../models/Purchase.js";
 
@@ -31,7 +32,9 @@ export const addCourse = async (req, res) => {
   try {
     const { courseData } = req.body;
     const imageFile = req.file;
-    const educatorId = req.auth.userId;
+    const { userId } = req.auth();
+
+    const educatorId = userId;
 
     if (!imageFile) {
       return res.status(400).json({
@@ -62,8 +65,9 @@ export const addCourse = async (req, res) => {
 //get courses that belongs to an educator
 export const getEducatorCourses = async (req, res) => {
   try {
-    const educator = req.auth.userId;
+    const { userId } = req.auth();
 
+    const educator = userId;
     const courses = await Course.find({ educator });
 
     res.status(200).json({
@@ -81,7 +85,10 @@ export const getEducatorCourses = async (req, res) => {
 //get educator dashboard data
 export const educatorDashboardData = async (req, res) => {
   try {
-    const educator = req.auth.userId;
+    const { userId } = req.auth();
+
+    const educator = userId;
+
     const courses = await Course.find({ educator });
     const totalCourses = courses.length;
 
@@ -136,7 +143,8 @@ export const educatorDashboardData = async (req, res) => {
 //get enrolled students Data with purchase data
 export const getEnrolledStudentsData = async (req, res) => {
   try {
-    const educator = req.auth.userId;
+    const { userId } = req.auth();
+    const educator = userId;
     const courses = await Course.find({ educator });
     const courseIds = courses.map((course) => course._id);
 

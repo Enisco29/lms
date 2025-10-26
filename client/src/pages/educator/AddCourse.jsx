@@ -1,15 +1,20 @@
 import uniqid from "uniqid";
 import Quill from "quill";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { assets } from "../../assets/assets";
+import { AppContext } from "../../context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const AddCourse = () => {
+  const { backendUrl, getToken } = useContext(AppContext);
+
   const quillRef = useRef(null);
   const editorRef = useRef(null);
 
   const [courseTitle, setCourseTitle] = useState("");
   const [coursePrice, setCoursePrice] = useState(0);
-  const [disCount, setDisCount] = useState(0);
+  const [discount, setDiscount] = useState(0);
   const [image, setImage] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -94,7 +99,50 @@ const AddCourse = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      if (!image) {
+        toast.error("Thumbnail not selected");
+        return
+      }
+        
+    if (chapters.length === 0) {
+      toast.error("Please add at least one chapter");
+      return;
+    }
+      const courseData = {
+        courseTitle,
+        courseDescription: quillRef.current.root.innerHTML,
+        coursePrice: Number(coursePrice),
+        discount: Number(discount),
+        courseContent: chapters,
+      };
+
+      const formData = new FormData();
+      formData.append("courseData", JSON.stringify(courseData));
+      formData.append("image", image);
+
+      const token = await getToken();
+      const { data } = await axios.post(
+        backendUrl + "/api/educator/add-course",
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setCourseTitle("");
+        setCoursePrice(0);
+        setDiscount(0);
+        setImage(null);
+        setChapters([]);
+        quillRef.current.root.innerHTML = "";
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -131,7 +179,7 @@ const AddCourse = () => {
             <p>Course price</p>
             <input
               type="number"
-              onChange={(e) => setCoursePrice(e.target.validationMessage)}
+              onChange={(e) => setCoursePrice(e.target.value)}
               value={coursePrice}
               placeholder="0"
               className="outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500 required"
@@ -144,7 +192,7 @@ const AddCourse = () => {
               <img
                 src={assets.file_upload_icon}
                 alt="upload_icon"
-                className="p-3 bg-blue-500 rounded"
+                className="p-3 bg-blue-500 rounded cursor-pointer"
               />
 
               <input
@@ -167,8 +215,8 @@ const AddCourse = () => {
           <p>Discount %</p>
           <input
             type="number"
-            onChange={(e) => setDisCount(e.target.value)}
-            value={disCount}
+            onChange={(e) => setDiscount(e.target.value)}
+            value={discount}
             placeholder="0"
             min={0}
             max={100}
@@ -326,7 +374,7 @@ const AddCourse = () => {
                 <button
                   onClick={addLecture}
                   type="button"
-                  className="w-full bg-blue-400 text-white px-4 py-2 rounded"
+                  className="w-full bg-blue-400 text-white px-4 py-2 rounded cursor-pointer"
                 >
                   Add
                 </button>
@@ -344,7 +392,8 @@ const AddCourse = () => {
 
         <button
           type="submit"
-          className="bg-black text-white w-max py-2.5 px-8 rounded my-4"
+          disabled={!courseTitle || !image || !chapters.length}
+          className="bg-black text-white w-max py-2.5 px-8 cursor-pointer rounded my-4"
         >
           ADD
         </button>
